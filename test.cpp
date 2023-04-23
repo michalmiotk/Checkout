@@ -60,6 +60,16 @@ TEST_F(TestCheckout, givenCheckoutWithThreeIdenticalProductsAndDiscountForEachTh
     EXPECT_EQ(result, desiredResult);
 }
 
+TEST_F(TestCheckout, givenCheckoutWithThreeProductTwoIdenticalProductsAndOneWithDifferentPriceAndDiscountForEachThreeIdenticalProduct_whensumMethodIsCalled_thenExpectReturnSum){
+    uint32_t desiredResult = 21'00;
+    Product cheapwatermelon("watermelon", 1'00);
+    Checkout checkout({watermelon, watermelon, cheapwatermelon}, std::make_unique<ForEachIdenticalThreeProductsTenPercentDiscount>());
+
+    const auto result = checkout.sumWithDiscount();
+    
+    EXPECT_EQ(result, desiredResult);
+}
+
 TEST_F(TestCheckout, givenCheckoutWithSixIdenticalProductsAndDiscountForEachThreeIdenticalProduct_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
     uint32_t desiredResult = 54'00;
     Checkout checkout({watermelon, watermelon, watermelon, watermelon, watermelon, watermelon}, std::make_unique<ForEachIdenticalThreeProductsTenPercentDiscount>());
