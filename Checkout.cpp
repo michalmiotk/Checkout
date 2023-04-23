@@ -28,14 +28,14 @@ std::string Checkout::getReceipt() const{
     const auto productsAndQuantity = getProductsAndQuantity();
     for( const auto& [product, quantity] : productsAndQuantity)
     {
-        auto sum = quantity * product.getPrice();
-        auto name = product.getName();
-        auto calculations = std::to_string(quantity) + "x"+
+        const auto sum = quantity * product.getPrice();
+        const auto name = product.getName();
+        const auto calculations = std::to_string(quantity) + "x"+
                     getPriceInZloty(product.getPrice()) + " " + getPriceInZloty(sum);
         output += formatStrings(name, calculations);
         if(discount){
             if(auto discountValue = discount->getDiscount(product, quantity); discountValue > 0){
-                output += formatStrings(discount->getName(),  getPriceInZloty(discountValue));
+                output += formatStrings(discount->getName(),  "-"+getPriceInZloty(discountValue));
             }
         }
     }
@@ -46,7 +46,7 @@ std::string Checkout::getReceipt() const{
 
 std::string Checkout::formatStrings(std::string name, std::string calculations) const{
     std::string output;
-    const auto totalSigns = 60;
+    const auto totalSigns = 70;
     const int numberOfSpaces = totalSigns - name.size() - calculations.size();
     output += name;
     for(int i=0;i<numberOfSpaces;i++){

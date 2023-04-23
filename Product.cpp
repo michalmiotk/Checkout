@@ -12,5 +12,5 @@ std::string Product::getName() const{
 
 bool operator==(const Product& lhs, const Product& rhs)
 {
-    return lhs.name == rhs.name and lhs.price == rhs.price;
+    return lhs.getName() == rhs.getName() and lhs.getPrice() == rhs.getPrice();
 }

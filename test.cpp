@@ -18,6 +18,7 @@ public:
     const Product blueberry{"blueberry", 50'00};
     const Product ananas{"Ananas", 4'00};
     const Product avocado{"avocado", 10'00};
+    const Product rice{"rice", 3};
 };
 
 TEST_F(TestCheckout, givenCheckoutWithTwoProducts_whengetSumWithDiscountMethodIsCalled_thenExpectSumOfPrices)
@@ -54,6 +55,15 @@ TEST_F(TestCheckout, givenCheckoutWithTwoIdenticalProductsAndDiscountForThreeIde
 TEST_F(TestCheckout, givenCheckoutWithThreeIdenticalProductsAndDiscountForEachThreeIdenticalProduct_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
     const grosz expectedResult = 27'00;
     Checkout checkout({watermelon, watermelon, watermelon}, std::make_unique<ForEachIdenticalThreeProductsTenPercentDiscount>());
+
+    const auto result = checkout.getSumWithDiscount();
+    
+    EXPECT_EQ(result, expectedResult);
+}
+
+TEST_F(TestCheckout, givenCheckoutWithThreeIdenticalCheapProductsAndDiscountForEachThreeIdenticalProduct_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
+    const grosz expectedResult = 8;
+    Checkout checkout({rice, rice, rice}, std::make_unique<ForEachIdenticalThreeProductsTenPercentDiscount>());
 
     const auto result = checkout.getSumWithDiscount();
     

@@ -1,11 +1,18 @@
+#include <cfenv>
+
 #include "types.hpp"
 #include "Product.hpp"
 #include "Discount.hpp"
 
 grosz ForEachIdenticalThreeProductsTenPercentDiscount::getDiscount(const Product& product, uint32_t quantity) const 
 {
-    auto quantityQualifiedForDiscount = quantity - (quantity % 3);
-    return quantityQualifiedForDiscount * product.getPrice()/10;
+    const auto quantityQualifiedForDiscount = quantity - (quantity % 3);
+    auto result = (quantityQualifiedForDiscount * product.getPrice())/10;
+    const auto moduloResult = (quantityQualifiedForDiscount * product.getPrice())%10;
+    if(moduloResult >= 5){
+        result++;
+    }
+    return result;
 }
 
 std::string ForEachIdenticalThreeProductsTenPercentDiscount::getName() const {

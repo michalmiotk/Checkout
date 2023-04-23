@@ -6,9 +6,11 @@
 #include <string>
 #include <unordered_map>
 
-#include "Product.hpp"
 #include "types.hpp"
-#include "Discount.hpp"
+
+class Discount;
+class Product;
+
 
 class Checkout{
 public:
@@ -23,5 +25,7 @@ private:
     std::string getPriceInZloty(const grosz price) const;
     std::unordered_map<Product, uint32_t> getProductsAndQuantity() const;
 };
+
+
 
 #endif
