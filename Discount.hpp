@@ -6,28 +6,28 @@
 #include "types.hpp"
 #include "Product.hpp"
 
-class DiscountForEachProduct{
+class Discount{
 public:
-    virtual grosz get(const Product& product, uint32_t quantity) const = 0;
-    virtual std::string name() const = 0;
+    virtual grosz getDiscount(const Product& product, uint32_t quantity) const = 0;
+    virtual std::string getName() const = 0;
 };
 
-class ForEachIdenticalThreeProductsTenPercentDiscount: public DiscountForEachProduct{
+class ForEachIdenticalThreeProductsTenPercentDiscount: public Discount{
 public:
-    grosz get(const Product& product, uint32_t quantity) const  override;
-    std::string name() const override;
+    [[nodiscard]] grosz getDiscount(const Product& product, uint32_t quantity) const  override;
+    std::string getName() const override;
 };
 
-class ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount: public DiscountForEachProduct{
+class ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount: public Discount{
 public:
-    grosz get(const Product& product, uint32_t quantity) const override;
-    std::string name() const override;
+    [[nodiscard]] grosz getDiscount(const Product& product, uint32_t quantity) const override;
+    std::string getName() const override;
 };
 
-class ProductWithNameStartingWithLetterATenPercentDiscount: public DiscountForEachProduct{
+class ProductWithNameStartingWithLetterATenPercentDiscount: public Discount{
 public:
-    grosz get(const Product& product, uint32_t quantity) const override;
-    std::string name() const override;
+    [[nodiscard]] grosz getDiscount(const Product& product, uint32_t quantity) const override;
+    std::string getName() const override;
 };
 
 #endif

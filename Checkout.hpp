@@ -12,12 +12,12 @@
 
 class Checkout{
 public:
-    Checkout(std::vector<Product> products, std::unique_ptr<DiscountForEachProduct> discountForEachProduct={});
-    grosz sumWithDiscount() const;
-    std::string getReceipt() const;
+    Checkout(std::vector<Product> products, std::unique_ptr<Discount> discountForEachProduct={});
+    [[nodiscard]] grosz getSumWithDiscount() const;
+    [[nodiscard]] std::string getReceipt() const;
 private:
     const std::vector<Product> products;
-    const std::unique_ptr<DiscountForEachProduct> discountForEachProduct;
+    const std::unique_ptr<Discount> discount;
     std::string formatStrings(std::string name, std::string calculations) const;
     grosz getDiscount() const;
     std::string getPriceInZloty(const grosz price) const;

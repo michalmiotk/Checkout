@@ -4,21 +4,20 @@
 #include "Product.hpp"
 #include "Checkout.hpp"
 
-namespace std {
+
 template <>
-struct hash<Product> {
-  size_t operator()(const Product& product) const{
-    return hash<string>()(product.getName());
+struct std::hash<Product> {
+  std::size_t operator()(const Product& product) const{
+    return std::hash<string>()(product.getName());
   }
 };
+
+
+Checkout::Checkout(std::vector<Product> products, std::unique_ptr<Discount> discount): products(products),
+        discount(std::move(discount)){  
 }
 
-
-Checkout::Checkout(std::vector<Product> products, std::unique_ptr<DiscountForEachProduct> discountForEachProduct): products(products),
-        discountForEachProduct(std::move(discountForEachProduct)){  
-}
-
-grosz Checkout::sumWithDiscount() const{
+grosz Checkout::getSumWithDiscount() const{
     grosz rawSum{};
     std::for_each(products.begin(), products.end(), [&rawSum](auto product){rawSum += product.getPrice();});
     return rawSum - getDiscount();
@@ -34,14 +33,14 @@ std::string Checkout::getReceipt() const{
         auto calculations = std::to_string(quantity) + "x"+
                     getPriceInZloty(product.getPrice()) + " " + getPriceInZloty(sum);
         output += formatStrings(name, calculations);
-        if(discountForEachProduct){
-            if(auto discount = discountForEachProduct->get(product, quantity); discount > 0){
-                output += formatStrings(discountForEachProduct->name(),  getPriceInZloty(discount));
+        if(discount){
+            if(auto discountValue = discount->getDiscount(product, quantity); discountValue > 0){
+                output += formatStrings(discount->getName(),  getPriceInZloty(discountValue));
             }
         }
     }
     output += "------------------------------------------------------------\n";
-    output += formatStrings("SUMA PLN", getPriceInZloty(sumWithDiscount()));
+    output += formatStrings("SUMA PLN", getPriceInZloty(getSumWithDiscount()));
     return output;
 }
 
@@ -59,15 +58,15 @@ std::string Checkout::formatStrings(std::string name, std::string calculations) 
 }
 
 grosz Checkout::getDiscount() const{
-    grosz discount{};
-    if(discountForEachProduct){
+    grosz discountSum{};
+    if(discount){
         const auto productsAndQuantity = getProductsAndQuantity();
         for(const auto& [product, quantity] : productsAndQuantity)
         {
-            discount += discountForEachProduct->get(product, quantity);
+            discountSum += discount->getDiscount(product, quantity);
         }
     }
-    return discount;
+    return discountSum;
 }
 
 std::string Checkout::getPriceInZloty(const grosz price) const{
