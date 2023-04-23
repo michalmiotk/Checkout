@@ -3,6 +3,5 @@
 
 #include <cstdint>
 
-using priceInGrosze = uint32_t;
-
+using grosze = uint32_t;
 #endif

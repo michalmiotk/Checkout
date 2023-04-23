@@ -2,18 +2,18 @@
 #include "Product.hpp"
 #include "Discount.hpp"
 
-priceInGrosze ForEachIdenticalThreeProductsTenPercentDiscount::get(const Product& product, uint32_t quantity)
+grosze ForEachIdenticalThreeProductsTenPercentDiscount::get(const Product& product, uint32_t quantity) const 
 {
     auto quantityQualifiedForDiscount = quantity - (quantity % 3);
     return quantityQualifiedForDiscount * product.getPrice()/10;
 }
 
-std::string ForEachIdenticalThreeProductsTenPercentDiscount::name(){
+std::string ForEachIdenticalThreeProductsTenPercentDiscount::name() const {
     return "ForEachIdenticalThreeProductsTenPercentDiscount"; 
 }
 
 
-priceInGrosze ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::get(const Product& product, uint32_t quantity)
+grosze ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::get(const Product& product, uint32_t quantity) const 
 {
     if(product.getPrice() <= 50'00){
         return 0;
@@ -21,12 +21,12 @@ priceInGrosze ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::get(const Pr
     return quantity * product.getPrice()/5;
 }
 
-std::string ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::name(){
+std::string ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::name() const {
     return "ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount";
 }
 
 
-priceInGrosze ProductWithNameStartingWithLetterATenPercentDiscount::get(const Product& product, uint32_t quantity)
+grosze ProductWithNameStartingWithLetterATenPercentDiscount::get(const Product& product, uint32_t quantity) const 
 {
     if(product.getName().size() == 0){
         return 0;
@@ -39,6 +39,6 @@ priceInGrosze ProductWithNameStartingWithLetterATenPercentDiscount::get(const Pr
     return 0;
 }
 
-std::string ProductWithNameStartingWithLetterATenPercentDiscount::name(){
+std::string ProductWithNameStartingWithLetterATenPercentDiscount::name() const {
     return "ProductWithNameStartingWithLetteraTenPercentDiscount";
 }

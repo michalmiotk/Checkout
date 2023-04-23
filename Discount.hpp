@@ -8,26 +8,26 @@
 
 class DiscountForEachProduct{
 public:
-    virtual priceInGrosze get(const Product& product, uint32_t quantity) = 0;
-    virtual std::string name() = 0;
+    virtual grosze get(const Product& product, uint32_t quantity) const = 0;
+    virtual std::string name() const = 0;
 };
 
 class ForEachIdenticalThreeProductsTenPercentDiscount: public DiscountForEachProduct{
 public:
-    priceInGrosze get(const Product& product, uint32_t quantity) override;
-    std::string name() override;
+    grosze get(const Product& product, uint32_t quantity) const  override;
+    std::string name() const override;
 };
 
 class ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount: public DiscountForEachProduct{
 public:
-    priceInGrosze get(const Product& product, uint32_t quantity) override;
-    std::string name() override;
+    grosze get(const Product& product, uint32_t quantity) const override;
+    std::string name() const override;
 };
 
 class ProductWithNameStartingWithLetterATenPercentDiscount: public DiscountForEachProduct{
 public:
-    priceInGrosze get(const Product& product, uint32_t quantity) override;
-    std::string name() override;
+    grosze get(const Product& product, uint32_t quantity) const override;
+    std::string name() const override;
 };
 
 #endif
