@@ -22,10 +22,10 @@ include_directories(../src)
 include(GoogleTest)
 
 
-add_library(Receipt Receipt.cpp)
+add_library(Checkout Checkout.cpp)
 
 add_executable(main main.cpp)
-target_link_libraries(main Receipt)
+target_link_libraries(main Checkout)
 
 add_executable(test test.cpp)
-target_link_libraries(test Receipt GTest::gtest_main GTest::gmock_main)
+target_link_libraries(test Checkout GTest::gtest_main GTest::gmock_main)

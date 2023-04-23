@@ -1,81 +1,71 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "Receipt.cpp"
+#include "Checkout.cpp"
 
 using namespace testing;
 
 
-TEST(Receipt, givenReceiptWithTwoProducts_whensumMethodIsCalled_thenExpectSumOfPrices)
+TEST(Checkout, givenCheckoutWithTwoProducts_whensumMethodIsCalled_thenExpectSumOfPrices)
 {
     uint32_t desiredResult = 37;
     Product cigarettes{"malboro", 33};
     Product cola{"cola", 4};
-    Receipt receipt;
-    receipt.addProduct(cigarettes);
-    receipt.addProduct(cola);
+    Checkout checkout({cigarettes, cola});
 
-    auto result = receipt.sum();
+    auto result = checkout.sum();
     
     EXPECT_EQ(result, desiredResult);
 }
 
 
-TEST(Receipt, givenReceiptWithOneProduct_whensumMethodIsCalled_thenExpectProductPrice)
+TEST(Checkout, givenCheckoutWithOneProduct_whensumMethodIsCalled_thenExpectProductPrice)
 {
     uint32_t desiredResult = 10;
     Product watermelon{"arbuz", 10};
-    Receipt receipt;
-    receipt.addProduct(watermelon);
+    Checkout checkout({watermelon});
 
-    auto result = receipt.sum();
+    auto result = checkout.sum();
     
     EXPECT_EQ(result, desiredResult);
 }
 
-TEST(Receipt, givenReceiptWithThreeIdenticalProducts_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
+TEST(Checkout, givenCheckoutWithThreeIdenticalProducts_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
     uint32_t desiredResult = 27;
     Product watermelon{"arbuz", 10};
-    Receipt receipt;
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
+    Checkout checkout({watermelon, watermelon, watermelon});
 
-    auto result = receipt.sum();
+    auto result = checkout.sum();
     
     EXPECT_EQ(result, desiredResult);
 }
 
-TEST(Receipt, givenReceiptWithSixIdenticalProducts_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
+TEST(Checkout, givenCheckoutWithSixIdenticalProducts_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
     uint32_t desiredResult = 54;
     Product watermelon{"arbuz", 10};
-    Receipt receipt;
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
+    Checkout checkout({watermelon, watermelon, watermelon, watermelon, watermelon, watermelon});
 
-    auto result = receipt.sum();
+    auto result = checkout.sum();
     
     EXPECT_EQ(result, desiredResult);
 }
 
-TEST(Receipt, givenReceiptWithSixIdenticalProductsInTwoCategories_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
+TEST(Checkout, givenCheckoutWithSixIdenticalProductsInTwoCategories_whensumMethodIsCalled_thenExpectReturnSumWith10PercentOfDiscount){
     uint32_t desiredResult = 81;
     Product watermelon{"arbuz", 10};
     Product banana{"banana", 20};
-    Receipt receipt;
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
-    receipt.addProduct(watermelon);
-    
-    receipt.addProduct(banana);
-    receipt.addProduct(banana);
-    receipt.addProduct(banana);
+    Checkout checkout({watermelon, watermelon, watermelon, banana, banana, banana});
 
-    auto result = receipt.sum();
+    auto result = checkout.sum();
     
     EXPECT_EQ(result, desiredResult);
+}
+
+TEST(Checkout, giventCheckoutWithThreeIdenticalProducts_whengetReceiptMethodIsCalled_thenExpectNonEmptyOutput){
+    Product watermelon{"arbuz", 10};
+    Checkout checkout({watermelon, watermelon, watermelon});
+
+    auto receipt = checkout.getReceipt();
+
+    EXPECT_GT(receipt.size(), 0);
 }
