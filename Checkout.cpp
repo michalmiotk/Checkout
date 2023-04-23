@@ -18,8 +18,8 @@ Checkout::Checkout(std::vector<Product> products, std::unique_ptr<DiscountForEac
         discountForEachProduct(std::move(discountForEachProduct)){  
 }
 
-grosze Checkout::sumWithDiscount() const{
-    grosze rawSum{};
+grosz Checkout::sumWithDiscount() const{
+    grosz rawSum{};
     std::for_each(products.begin(), products.end(), [&rawSum](auto product){rawSum += product.getPrice();});
     return rawSum - getDiscount();
 }
@@ -58,8 +58,8 @@ std::string Checkout::formatStrings(std::string name, std::string calculations) 
     return output;
 }
 
-grosze Checkout::getDiscount() const{
-    grosze discount{};
+grosz Checkout::getDiscount() const{
+    grosz discount{};
     if(discountForEachProduct){
         const auto productsAndQuantity = getProductsAndQuantity();
         for(const auto& [product, quantity] : productsAndQuantity)
@@ -70,7 +70,7 @@ grosze Checkout::getDiscount() const{
     return discount;
 }
 
-std::string Checkout::getPriceInZloty(const grosze price) const{
+std::string Checkout::getPriceInZloty(const grosz price) const{
     return std::to_string(price/100) + "," + std::to_string(price%100);
 }
 

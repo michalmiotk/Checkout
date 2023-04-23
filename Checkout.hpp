@@ -13,14 +13,14 @@
 class Checkout{
 public:
     Checkout(std::vector<Product> products, std::unique_ptr<DiscountForEachProduct> discountForEachProduct={});
-    grosze sumWithDiscount() const;
+    grosz sumWithDiscount() const;
     std::string getReceipt() const;
 private:
     const std::vector<Product> products;
     const std::unique_ptr<DiscountForEachProduct> discountForEachProduct;
     std::string formatStrings(std::string name, std::string calculations) const;
-    grosze getDiscount() const;
-    std::string getPriceInZloty(const grosze price) const;
+    grosz getDiscount() const;
+    std::string getPriceInZloty(const grosz price) const;
     std::unordered_map<Product, uint32_t> getProductsAndQuantity() const;
 };
 

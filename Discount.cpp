@@ -2,7 +2,7 @@
 #include "Product.hpp"
 #include "Discount.hpp"
 
-grosze ForEachIdenticalThreeProductsTenPercentDiscount::get(const Product& product, uint32_t quantity) const 
+grosz ForEachIdenticalThreeProductsTenPercentDiscount::get(const Product& product, uint32_t quantity) const 
 {
     auto quantityQualifiedForDiscount = quantity - (quantity % 3);
     return quantityQualifiedForDiscount * product.getPrice()/10;
@@ -13,7 +13,7 @@ std::string ForEachIdenticalThreeProductsTenPercentDiscount::name() const {
 }
 
 
-grosze ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::get(const Product& product, uint32_t quantity) const 
+grosz ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::get(const Product& product, uint32_t quantity) const 
 {
     if(product.getPrice() <= 50'00){
         return 0;
@@ -26,7 +26,7 @@ std::string ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount::name() const {
 }
 
 
-grosze ProductWithNameStartingWithLetterATenPercentDiscount::get(const Product& product, uint32_t quantity) const 
+grosz ProductWithNameStartingWithLetterATenPercentDiscount::get(const Product& product, uint32_t quantity) const 
 {
     if(product.getName().size() == 0){
         return 0;

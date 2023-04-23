@@ -1,8 +1,8 @@
 #include "Product.hpp"
 
-Product::Product(const std::string& name, const grosze price): name(name), price(price){}
+Product::Product(const std::string& name, const grosz price): name(name), price(price){}
 
-grosze Product::getPrice() const{
+grosz Product::getPrice() const{
     return price;
 }
 

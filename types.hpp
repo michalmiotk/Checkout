@@ -3,5 +3,5 @@
 
 #include <cstdint>
 
-using grosze = uint32_t;
+using grosz = uint32_t;
 #endif
