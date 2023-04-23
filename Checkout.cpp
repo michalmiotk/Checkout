@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <numeric>
 #include <unordered_map>
+#include <memory>
+
 
 using priceInGrosze = uint32_t;
 class Product{
@@ -36,27 +38,66 @@ struct hash<Product> {
     return hash<string>()(record.getName());
   }
 };
-}  
+}
+
+class DiscountForEachProduct{
+public:
+    virtual priceInGrosze get(const Product& product, uint32_t quantity) = 0;
+    virtual std::string name() = 0;
+};
+
+class ForEachIdenticalThreeProductsTenPercentDiscount: public DiscountForEachProduct{
+public:
+    priceInGrosze get(const Product& product, uint32_t quantity) override
+    {
+        auto quantityQualifiedForDiscount = quantity - (quantity % 3);
+        return quantityQualifiedForDiscount * product.getPrice()/10;
+    }
+
+    std::string name() override{
+        return "ForEachIdenticalThreeProductsTenPercentDiscount"; 
+    }
+};
+
+class ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount: public DiscountForEachProduct{
+public:
+    priceInGrosze get(const Product& product, uint32_t quantity) override
+    {
+        if(product.getPrice() <= 50'00){
+            return 0;
+        }
+        return quantity * product.getPrice()/5;
+    }
+
+    std::string name() override{
+        return "ProductWithPriceAboveFiftyZlotyTwentyPercentDiscount";
+    }
+};
+
+
+class ProductWithNameStartingWithLetterATenPercentDiscount: public DiscountForEachProduct{
+public:
+    priceInGrosze get(const Product& product, uint32_t quantity) override
+    {
+        return 40;
+    }
+
+    std::string name() override{
+        return "ProductWithNameStartingWithLetterATenPercentDiscount";
+    }
+};
+
 
 class Checkout{
 public:
-    Checkout(std::vector<Product> products): products(products){  
+    Checkout(std::vector<Product> products, std::unique_ptr<DiscountForEachProduct> discountForEachProduct): products(products),
+        discountForEachProduct(std::move(discountForEachProduct)){  
     }
-    priceInGrosze sum(){
+
+    priceInGrosze sumWithDiscount(){
         priceInGrosze rawSum{};
         std::for_each(products.begin(), products.end(), [&rawSum](auto product){rawSum += product.getPrice();});
         return rawSum - getDiscount();
-    }
-
-    priceInGrosze getDiscount(){
-        priceInGrosze discount{};
-        const auto productsAndQuantity = getProductsAndQuantity();
-        for( const auto& [product, quantity] : productsAndQuantity)
-        {
-            auto quantityQualifiedForDiscount = quantity - (quantity % 3);
-            discount += quantityQualifiedForDiscount * product.getPrice()/10;
-        }
-        return discount;
     }
 
     std::string getReceipt(){
@@ -69,19 +110,23 @@ public:
             auto calculations = std::to_string(quantity) + "x"+
                       getPriceInZloty(product.getPrice()) + " " + getPriceInZloty(sum);
             output += formatStrings(name, calculations);
-            if(auto discount = getDiscountForEachIdenticalThreeProductsTenPercentDiscount(product, quantity); discount > 0){
-                output += formatStrings("DiscountForEachIdenticalThreeProducts",  std::to_string(discount));
+            if(discountForEachProduct){
+                if(auto discount = discountForEachProduct->get(product, quantity); discount > 0){
+                    output += formatStrings(discountForEachProduct->name(),  getPriceInZloty(discount));
+                }
             }
         }
         output += "------------------------------------------------------------\n";
-        output += formatStrings("SUMA PLN", getPriceInZloty(sum() - getDiscount()));
-        //std::cout<<output;
+        output += formatStrings("SUMA PLN", getPriceInZloty(sumWithDiscount()));
         return output;
     }
 private:
+    std::vector<Product> products;
+    std::unique_ptr<DiscountForEachProduct> discountForEachProduct;
+
     std::string formatStrings(std::string name, std::string calculations){
         std::string output;
-        auto total_signs = 50;
+        auto total_signs = 60;
         int space_number = total_signs - name.size() - calculations.size();
         output += name;
         for(int i=0;i<space_number;i++){
@@ -92,10 +137,16 @@ private:
         return output;
     }
 
-    priceInGrosze getDiscountForEachIdenticalThreeProductsTenPercentDiscount(const Product& product, uint32_t quantity)
-    {
-        auto quantityQualifiedForDiscount = quantity - (quantity % 3);
-        return quantityQualifiedForDiscount * product.getPrice()/10;
+    priceInGrosze getDiscount(){
+        priceInGrosze discount{};
+        const auto productsAndQuantity = getProductsAndQuantity();
+        if(discountForEachProduct){
+            for( const auto& [product, quantity] : productsAndQuantity)
+            {
+                discount += discountForEachProduct->get(product, quantity);
+            }
+        }
+        return discount;
     }
 
     std::string getPriceInZloty(priceInGrosze price){
@@ -113,5 +164,4 @@ private:
         }
         return productsAndQuantity;
     }
-    std::vector<Product> products;
 };
