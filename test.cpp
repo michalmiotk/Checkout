@@ -1,7 +1,9 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 
-#include "Checkout.cpp"
+#include "Checkout.hpp"
+#include "Product.hpp"
+#include "Discount.hpp"
 
 using namespace testing;
 
@@ -14,13 +16,15 @@ public:
     Product banana{"banana", 20'00};
     Product raspberry{"raspberry", 100'00};
     Product blueberry{"blueberry", 50'00};
+    Product ananas{"Ananas", 4'00};
+    Product avocado{"avocado", 10'00};
 };
 
 TEST_F(TestCheckout, givenCheckoutWithTwoProducts_whensumMethodIsCalled_thenExpectSumOfPrices)
 {
     uint32_t desiredResult = 37'00;
     
-    Checkout checkout({strawberry, apple}, {});
+    Checkout checkout({strawberry, apple});
 
     auto result = checkout.sumWithDiscount();
     
@@ -31,7 +35,7 @@ TEST_F(TestCheckout, givenCheckoutWithTwoProducts_whensumMethodIsCalled_thenExpe
 TEST_F(TestCheckout, givenCheckoutWithOneProduct_whensumMethodIsCalled_thenExpectProductPrice)
 {
     uint32_t desiredResult = 10'00;
-    Checkout checkout({watermelon}, {});
+    Checkout checkout({watermelon});
 
     auto result = checkout.sumWithDiscount();
     
@@ -100,9 +104,36 @@ TEST_F(TestCheckout, givenCheckoutWithProductsPriceEqual50zlotyAndDiscountForPro
     EXPECT_EQ(result, desiredResult);
 }
 
-TEST_F(TestCheckout, givenCheckoutWithProductStartingWithLetteraAndDiscountForProductStartWithLettera_whensumMethodIsCalled_thenExpectReturnPriceWith10PercentDiscount){
+TEST_F(TestCheckout, givenCheckoutWithProductStartingWithLetteraandDiscountForProductStartWithLettera_whensumMethodIsCalled_thenExpectReturnPriceWith10PercentDiscount){
     priceInGrosze expectedResult = 3'60;
     Checkout checkout({apple}, std::make_unique<ProductWithNameStartingWithLetterATenPercentDiscount>());
+
+    auto result = checkout.sumWithDiscount();
+
+    EXPECT_EQ(result, expectedResult);
+}
+
+TEST_F(TestCheckout, givenCheckoutWithProductStartingWithLetterAandDiscountForProductStartWithLettera_whensumMethodIsCalled_thenExpectReturnPriceWith10PercentDiscount){
+    priceInGrosze expectedResult = 3'60;
+    Checkout checkout({ananas}, std::make_unique<ProductWithNameStartingWithLetterATenPercentDiscount>());
+
+    auto result = checkout.sumWithDiscount();
+
+    EXPECT_EQ(result, expectedResult);
+}
+
+TEST_F(TestCheckout, givenCheckoutWithProductStartingWithLetterbandDiscountForProductStartWithLettera_whensumMethodIsCalled_thenExpectReturnPrice){
+    priceInGrosze expectedResult = 20'00;
+    Checkout checkout({banana}, std::make_unique<ProductWithNameStartingWithLetterATenPercentDiscount>());
+
+    auto result = checkout.sumWithDiscount();
+
+    EXPECT_EQ(result, expectedResult);
+}
+
+TEST_F(TestCheckout, givenCheckoutWithTwoIdenticalProductsStartingWithLetteraandDiscountForProductStartWithLettera_whensumMethodIsCalled_thenExpectReturnSumWith10PercentDiscount){
+    priceInGrosze expectedResult = 18'00;
+    Checkout checkout({avocado,avocado}, std::make_unique<ProductWithNameStartingWithLetterATenPercentDiscount>());
 
     auto result = checkout.sumWithDiscount();
 

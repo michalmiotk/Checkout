@@ -6,7 +6,7 @@ set(CMAKE_PROJECT_VERSION_MAJOR "")
 set(CMAKE_PROJECT_VERSION_MINOR "")
 set(CMAKE_PROJECT_VERSION_PATCH "")
 
-add_compile_options(-Wall -Wextra -Wpedantic --std=c++20)
+add_compile_options(-Wall -Wextra -Wpedantic --std=c++17)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -23,9 +23,11 @@ include(GoogleTest)
 
 
 add_library(Checkout Checkout.cpp)
+add_library(Discount Discount.cpp)
+add_library(Product Product.cpp)
 
 add_executable(main main.cpp)
-target_link_libraries(main Checkout)
+target_link_libraries(main Checkout Discount Product)
 
 add_executable(test test.cpp)
-target_link_libraries(test Checkout GTest::gtest_main GTest::gmock_main)
+target_link_libraries(test Checkout Product Discount GTest::gtest_main GTest::gmock_main)
